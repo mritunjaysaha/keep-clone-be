@@ -4,6 +4,10 @@ import { signup, login, signOut, isSignedIn } from '../controllers/auth.controll
 
 const router = Router();
 
+/**
+ * @method POST
+ * @route /api/auth/signup
+ */
 router.post(
     '/signup',
     [
@@ -13,3 +17,15 @@ router.post(
     ],
     signup,
 );
+
+/**
+ * @method POST
+ * @route /api/auth/login
+ */
+router.post(
+    '/login',
+    [check('email', 'E-mail is required').isEmail(), check('password', 'Password is require').isLength({ min: 1 })],
+    login,
+);
+
+export default router;
