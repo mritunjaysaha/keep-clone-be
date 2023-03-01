@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import { Request, Response } from 'express';
 
-exports.signup = (req: Request, res: Response) => {
+export const signup = (req: Request, res: Response) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -27,7 +27,7 @@ exports.signup = (req: Request, res: Response) => {
     });
 };
 
-exports.login = (req: Request, res: Response) => {
+export const login = (req: Request, res: Response) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -67,19 +67,19 @@ exports.login = (req: Request, res: Response) => {
     });
 };
 
-exports.signOut = (req: Request, res: Response) => {
+export const signOut = (req: Request, res: Response) => {
     res.clearCookie('token');
 
     return res.json({ message: 'signed out' });
 };
 
-exports.isSignedIn = expressJwt({
+export const isSignedIn = expressJwt({
     secret: process.env.SECRET,
     userProperty: 'auth',
     algorithms: ['sha1', 'RS256', 'HS256'],
 });
 
-exports.isAuthenticated = (req: Request, res: Response, next) => {
+export const isAuthenticated = (req: Request, res: Response, next) => {
     const { profile, auth } = req;
 
     const checker = profile && auth && profile._id.toString() === auth._id;
