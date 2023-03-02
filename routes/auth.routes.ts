@@ -39,6 +39,7 @@ router.get('/logout', signOut);
  * @route /api/auth/is-signed-in
  */
 router.get('/is-signed-in', isSignedIn, (req: Request, res: Response) => {
+    // @ts-ignore
     res.json(req.auth);
 });
 

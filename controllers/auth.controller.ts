@@ -1,13 +1,15 @@
 import { UserModel } from '../models/user.model';
 import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import expressJwt from 'express-jwt';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+
+import { expressjwt } from 'express-jwt';
 
 export const signup = (req: Request, res: Response) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+        // @ts-ignore
         return res.status(422).json({ error: errors.errors[0].msg });
     }
 
@@ -51,9 +53,11 @@ export const login = (req: Request, res: Response) => {
             });
         }
 
+        // @ts-ignore
         // create token
         const token = jwt.sign({ _id: user._id }, process.env.SECRET);
 
+        // @ts-ignore
         // put token in cookie
         res.cookie('token', token, { expire: new Date() + 9999 });
 
@@ -73,13 +77,15 @@ export const signOut = (req: Request, res: Response) => {
     return res.json({ message: 'signed out' });
 };
 
-export const isSignedIn = expressJwt({
+export const isSignedIn = expressjwt({
     secret: process.env.SECRET,
     userProperty: 'auth',
     algorithms: ['sha1', 'RS256', 'HS256'],
 });
 
+// @ts-ignore
 export const isAuthenticated = (req: Request, res: Response, next) => {
+    // @ts-ignore
     const { profile, auth } = req;
 
     const checker = profile && auth && profile._id.toString() === auth._id;
