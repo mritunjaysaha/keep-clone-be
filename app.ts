@@ -9,6 +9,7 @@ import { connectDB } from './config/db.config';
 // ROUTES
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import todoRoutes from './routes/todo.routes';
 
 //  INITIALIZE APP
 const app: Express = express();
@@ -27,5 +28,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/todo', todoRoutes);
 
 export { app };
