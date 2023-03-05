@@ -8,8 +8,7 @@ import { connectDB } from './config/db.config';
 
 // ROUTES
 import authRoutes from './routes/auth.routes';
-
-console.log({ authRoutes });
+import userRoutes from './routes/user.routes';
 
 //  INITIALIZE APP
 const app: Express = express();
@@ -27,5 +26,6 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Server up and running');
 });
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 
 export { app };
