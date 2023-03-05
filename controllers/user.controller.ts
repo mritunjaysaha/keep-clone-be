@@ -11,15 +11,16 @@ export const getUserById = (req: Request, res: Response, next: NextFunction, id:
 
         req.profile = user;
 
+        console.log('[getUserById]', req.profile);
         next();
     });
 };
 
 export const getUser = (req: Request, res: Response) => {
     req.profile.salt = undefined;
-    req.profile.encrypted_password = undefined;
+    req.profile.encryptedPassword = undefined;
     req.profile.createdAt = undefined;
     req.profile.updatedAt = undefined;
-
+    console.log('[getUser]', req.profile);
     return res.json(req.profile);
 };

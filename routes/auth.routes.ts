@@ -1,8 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { check } from 'express-validator';
 import { signup, login, signOut, isSignedIn } from '../controllers/auth.controller';
+import { getUserById } from '../controllers/user.controller';
 
 const router = Router();
+
+router.param('userId', getUserById);
 
 /**
  * @method POST
