@@ -35,6 +35,7 @@ const UserSchema: Schema = new Schema(
         salt: {
             type: String,
         },
+        todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
     },
     { timestamps: true },
 );
