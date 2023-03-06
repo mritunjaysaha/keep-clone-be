@@ -1,12 +1,13 @@
 import { Router } from 'express';
 
-import { createTodo, removeTodo } from '../controllers/todo.controller';
+import { createTodo, getTodo, getTodoById, removeTodo } from '../controllers/todo.controller';
 import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
 import { getUserById } from '../controllers/user.controller';
 
 const router = Router();
 
 router.param('userId', getUserById);
+router.param('todoId', getTodoById);
 
 /**
  * @method POST
@@ -14,12 +15,18 @@ router.param('userId', getUserById);
  * @description create a todo
  * @access private
  */
-router.post('/create/:userId', isSignedIn, isAuthenticated, createTodo);
+router.post('/:userId', isSignedIn, isAuthenticated, createTodo);
 
 /**
- * @method deleted
+ * @method DELETE
  * @route /api/todo/remove/:userId/:todoId
  */
-router.delete('/remove/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
+router.delete('/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
+
+/**
+ * @method GET
+ * @route /api/todo/:userId/:todoId
+ */
+router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
 
 export default router;
