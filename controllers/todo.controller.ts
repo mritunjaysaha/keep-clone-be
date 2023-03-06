@@ -27,3 +27,13 @@ export const createTodo = (req: Request, res: Response) => {
         return res.json(todo);
     });
 };
+
+export const removeTodo = (req: Request, res: Response) => {
+    TodoModel.deleteOne({ _id: req.params.todoId }, (err, course) => {
+        if (err) {
+            res.status(400).json({ error: 'Failed to find todo' });
+        }
+
+        return res.json({ msg: 'Todo successfully deleted' });
+    });
+};
