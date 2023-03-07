@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../models/user.model';
 
 export const getUserById = (req: Request, res: Response, next: NextFunction, id: string) => {
+    console.log('[getUserById]', { id });
     UserModel.findById(id).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({

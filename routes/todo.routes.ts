@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createTodo, getTodo, getTodoById, removeTodo } from '../controllers/todo.controller';
+import { createTodo, getAllTodoByUserId, getTodo, getTodoById, removeTodo } from '../controllers/todo.controller';
 import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
 import { getUserById } from '../controllers/user.controller';
 
@@ -28,5 +28,11 @@ router.delete('/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
  * @route /api/todo/:userId/:todoId
  */
 router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
+
+/**
+ * @method GET
+ * @route /api/todo/:userId/all
+ */
+router.get('/all/:userId', isSignedIn, isAuthenticated, getAllTodoByUserId);
 
 export default router;

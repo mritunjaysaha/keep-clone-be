@@ -53,3 +53,9 @@ export const removeTodo = (req: Request, res: Response) => {
 export const getTodo = (req: Request, res: Response) => {
     return res.json(req.todo);
 };
+
+export const getAllTodoByUserId = (req: Request, res: Response) => {
+    console.log('[getAllTodoByUserId]', req.profile);
+
+    return res.json(req.profile);
+};
