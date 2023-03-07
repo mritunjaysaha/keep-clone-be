@@ -57,5 +57,15 @@ export const getTodo = (req: Request, res: Response) => {
 export const getAllTodoByUserId = (req: Request, res: Response) => {
     console.log('[getAllTodoByUserId]', req.profile);
 
-    return res.json(req.profile);
+    UserModel.findById(req.profile.id)
+        .populate('todo')
+        .exec((err, user) => {
+            if (err) {
+                return res.status(400).json({ message: 'Failed to populate', error: err.message });
+            }
+
+            return res.json(user.todo);
+        });
+
+    // return res.json(req.profile);
 };

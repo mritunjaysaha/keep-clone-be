@@ -11,6 +11,7 @@ export const getUserById = (req: Request, res: Response, next: NextFunction, id:
         }
 
         req.profile = user;
+        req.profile.id = id;
 
         next();
     });
