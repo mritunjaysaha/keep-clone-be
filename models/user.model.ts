@@ -8,6 +8,8 @@ export interface IUser extends Document {
     email: string;
     encryptedPassword: string;
     salt: string;
+    todo: string[];
+    label: string[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -36,6 +38,7 @@ const UserSchema: Schema = new Schema(
             type: String,
         },
         todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
+        label: [{ type: Schema.Types.ObjectId, ref: 'label' }],
     },
     { timestamps: true },
 );
