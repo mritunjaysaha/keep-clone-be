@@ -43,6 +43,11 @@ export const createLabel = (req: Request, res: Response) => {
     });
 };
 
+/**
+ * TODO: remove labels from all the todo
+ * @param req
+ * @param res
+ */
 export const removeLabel = (req: Request, res: Response) => {
     LabelModel.deleteOne({ _id: req.label.id }, (err, label) => {
         if (err) {
