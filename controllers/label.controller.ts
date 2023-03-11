@@ -69,3 +69,5 @@ export const getAllLabelByUserId = (req: Request, res: Response) => {
             return res.json(user.label);
         });
 };
+
+export const getAllTodoByLabelId = (req: Request, res: Response) => {};
