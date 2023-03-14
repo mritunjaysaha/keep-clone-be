@@ -7,6 +7,7 @@ import {
     getLabelById,
     removeLabel,
     getAllTodoByLabelId,
+    putTodoToALabel,
 } from '../controllers/label.controller';
 
 import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
@@ -48,5 +49,11 @@ router.delete('/:userId/:labelId', isSignedIn, isAuthenticated, removeLabel);
  * @route /api/label/all/:userId/:labelId
  */
 router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getAllTodoByLabelId);
+
+/**
+ * @method PUT
+ * @route /api/label/:userId/:labelId/:todoId
+ */
+router.put('/:userId/:labelId/:todoId', isSignedIn, isAuthenticated, putTodoToALabel);
 
 export default router;

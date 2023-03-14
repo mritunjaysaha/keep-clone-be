@@ -83,3 +83,19 @@ export const getAllTodoByLabelId = (req: Request, res: Response) => {
             return res.json(label.todo);
         });
 };
+
+export const putTodoToALabel = (req: Request, res: Response) => {
+    console.log('[putTodoToALabel]');
+
+    LabelModel.findByIdAndUpdate(
+        req.label.id,
+        { $push: { todo: req.todo.id } },
+        { new: true, upsert: true },
+        (err, label) => {
+            if (err || !user) {
+                return res.status(400).json({ error: 'Failed to assign label', msg: err });
+            }
+            return res.json(label);
+        },
+    );
+};
