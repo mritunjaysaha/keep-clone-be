@@ -1,6 +1,13 @@
 import { Router } from 'express';
 
-import { createLabel, getLabel, getAllLabelByUserId, getLabelById, removeLabel } from '../controllers/label.controller';
+import {
+    createLabel,
+    getLabel,
+    getAllLabelByUserId,
+    getLabelById,
+    removeLabel,
+    getAllTodoByLabelId,
+} from '../controllers/label.controller';
 
 import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
 
@@ -35,5 +42,11 @@ router.post('/all/:userId', isSignedIn, isAuthenticated, getAllLabelByUserId);
  * @route /api/label/:userId/:labelId
  */
 router.delete('/:userId/:labelId', isSignedIn, isAuthenticated, removeLabel);
+
+/**
+ * @method GET
+ * @route /api/label/all/:userId/:labelId
+ */
+router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getAllTodoByLabelId);
 
 export default router;

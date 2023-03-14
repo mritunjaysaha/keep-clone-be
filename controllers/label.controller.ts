@@ -70,4 +70,16 @@ export const getAllLabelByUserId = (req: Request, res: Response) => {
         });
 };
 
-export const getAllTodoByLabelId = (req: Request, res: Response) => {};
+export const getAllTodoByLabelId = (req: Request, res: Response) => {
+    console.log('[getAllTodoByLabelId]', req.label);
+
+    LabelModel.findById(req.label.id)
+        .populate('todo')
+        .exec((err, label) => {
+            if (err) {
+                return res.status(400).json({ message: 'Failed to populate', error: err.message });
+            }
+
+            return res.json(label.todo);
+        });
+};
