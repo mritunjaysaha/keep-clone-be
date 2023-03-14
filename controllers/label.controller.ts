@@ -4,17 +4,21 @@ import { UserModel } from '../models/user.model';
 import { LabelModel } from '../models/label.model';
 
 export const getLabelById = (req: Request, res: Response, next: NextFunction, id: string) => {
-    LabelModel.findById(id).exec((err, todo) => {
+    LabelModel.findById(id).exec((err, label) => {
         if (err) {
             res.status(400).json({ error: 'Label not found' });
         }
 
+        console.log({ label });
         req.label = label;
         req.label.id = id;
+
+        next();
     });
 };
 
 export const getLabel = (req: Request, res: Response) => {
+    console.log('[getLabel]', req.label);
     return res.json(req.label);
 };
 
@@ -23,7 +27,7 @@ export const createLabel = (req: Request, res: Response) => {
 
     console.log('[createLabel]', req.body);
 
-    label.save((err, todo) => {
+    label.save((err, label) => {
         if (err) {
             return res.status(400).json({ error: 'Failed to create label', msg: err.message });
         }

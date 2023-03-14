@@ -18,7 +18,8 @@ import { getTodoById } from '../controllers/todo.controller';
 const router = Router();
 
 router.param('userId', getUserById);
-router.param('todoId', getLabelById);
+router.param('labelId', getLabelById);
+router.param('todoId', getTodoById);
 
 /**
  * @method POST
@@ -28,9 +29,9 @@ router.post('/:userId', isSignedIn, isAuthenticated, createLabel);
 
 /**
  * @method GET
- * @route /api/label/:userId
+ * @route /api/label/:userId/:labelId
  */
-router.post('/:userId', isSignedIn, isAuthenticated, getLabel);
+router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getLabel);
 
 /**
  * @method GET
