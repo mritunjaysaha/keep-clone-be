@@ -31,8 +31,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/todo', todoRoutes);
 app.use('/api/label', labelRoutes);
-app.use('*', (req: Request, res: Response) => {
-    return res.send('route does not exists');
-});
+// app.use('*', (req: Request, res: Response) => {
+//     return res.send('route does not exists');
+// });
 
 export { app };

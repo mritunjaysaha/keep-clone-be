@@ -29,15 +29,15 @@ router.post('/:userId', isSignedIn, isAuthenticated, createLabel);
 
 /**
  * @method GET
- * @route /api/label/:userId/:labelId
+ * @router /api/label/all/:userId
  */
-router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getLabel);
+router.get('/:userId/all', isSignedIn, isAuthenticated, getAllLabelByUserId);
 
 /**
  * @method GET
- * @router /api/label/all/:userId
+ * @route /api/label/:userId/:labelId
  */
-router.post('/all/:userId', isSignedIn, isAuthenticated, getAllLabelByUserId);
+router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getLabel);
 
 /**
  * @method DELETE
