@@ -28,9 +28,9 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Server up and running');
 });
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/todo', todoRoutes);
-app.use('/api/label', labelRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/todos', todoRoutes);
+app.use('/api/labels', labelRoutes);
 // app.use('*', (req: Request, res: Response) => {
 //     return res.send('route does not exists');
 // });
