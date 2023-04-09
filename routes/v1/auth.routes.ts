@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { check } from 'express-validator';
-import { signup, login, signOut, isSignedIn } from '../controllers/auth.controller';
-import { getUserById } from '../controllers/user.controller';
+import { signup, login, signOut, isSignedIn } from '../../controllers/auth.controller';
+import { getUserById } from '../../controllers/user.controller';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ router.param('userId', getUserById);
 
 /**
  * @method POST
- * @route /api/auth/signup
+ * @route /api/v1/auth/signup
  */
 router.post(
     '/signup',
@@ -23,7 +23,7 @@ router.post(
 
 /**
  * @method POST
- * @route /api/auth/login
+ * @route /api/v1/auth/login
  */
 router.post(
     '/login',
@@ -33,13 +33,13 @@ router.post(
 
 /**
  * @method GET
- * @route /api/auth/logout
+ * @route /api/v1/auth/logout
  */
 router.get('/logout', signOut);
 
 /**
  * @method GET
- * @route /api/auth/is-signed-in
+ * @route /api/v1/auth/is-signed-in
  */
 router.get('/is-signed-in', isSignedIn, (req: Request, res: Response) => {
     // @ts-ignore

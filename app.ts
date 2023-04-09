@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.config';
 
 // ROUTES
-import authRoutes from './routes/auth.routes';
+import authRoutes from './routes/v1/auth.routes';
 import userRoutes from './routes/user.routes';
 import todoRoutes from './routes/todo.routes';
 import labelRoutes from './routes/label.routes';
@@ -27,10 +27,10 @@ app.use(express.json({ extend: false }));
 app.get('/', (req: Request, res: Response) => {
     res.send('Server up and running');
 });
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/todos', todoRoutes);
-app.use('/api/labels', labelRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/todos', todoRoutes);
+app.use('/api/v1/labels', labelRoutes);
 // app.use('*', (req: Request, res: Response) => {
 //     return res.send('route does not exists');
 // });
