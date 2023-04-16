@@ -23,37 +23,42 @@ router.param('todoId', getTodoById);
 
 /**
  * @method POST
- * @route /api/label/:userId
+ * @route /api/v1/label/:userId
  */
 router.post('/:userId', isSignedIn, isAuthenticated, createLabel);
 
 /**
  * @method GET
- * @router /api/label/all/:userId
+ * @router /api/v1/label/all/:userId
  */
 router.get('/:userId/all', isSignedIn, isAuthenticated, getAllLabelByUserId);
 
 /**
  * @method GET
- * @route /api/label/:userId/:labelId
+ * @route /api/v1/label/:userId/:labelId
  */
 router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getLabel);
 
 /**
  * @method DELETE
- * @route /api/label/:userId/:labelId
+ * @route /api/v1/label/:userId/:labelId
  */
 router.delete('/:userId/:labelId', isSignedIn, isAuthenticated, removeLabel);
 
 /**
  * @method GET
- * @route /api/label/all/:userId/:labelId
+ * @route /api/v1/label/all/:userId/:labelId
  */
 router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getAllTodoByLabelId);
 
 /**
  * @method PUT
- * @route /api/label/:userId/:labelId/:todoId
+ * @route /api/v1/labels/:userId/:labelId
+ */
+
+/**
+ * @method PUT
+ * @route /api/v1/label/:userId/:labelId/:todoId
  */
 router.put('/:userId/:labelId/:todoId', isSignedIn, isAuthenticated, putTodoToALabel);
 

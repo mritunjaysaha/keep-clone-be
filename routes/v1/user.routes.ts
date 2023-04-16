@@ -9,7 +9,7 @@ router.param('userId', getUserById);
 
 /**
  * @method GET
- * @route /api/user/:userId
+ * @route /api/v1/user/:userId
  * @description get the user info
  * @access private
  */

@@ -11,7 +11,7 @@ router.param('todoId', getTodoById);
 
 /**
  * @method POST
- * @route /api/todo/create/:userId
+ * @route /api/v1/todo/create/:userId
  * @description create a todo
  * @access private
  */
@@ -19,19 +19,19 @@ router.post('/:userId', isSignedIn, isAuthenticated, createTodo);
 
 /**
  * @method GET
- * @route /api/todo/:userId
+ * @route /api/v1/todo/:userId
  */
 router.get('/all/:userId', isSignedIn, isAuthenticated, getAllTodoByUserId);
 
 /**
  * @method DELETE
- * @route /api/todo/remove/:userId/:todoId
+ * @route /api/v1/todo/remove/:userId/:todoId
  */
 router.delete('/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
 
 /**
  * @method GET
- * @route /api/todo/:userId/:todoId
+ * @route /api/v1/todo/:userId/:todoId
  */
 router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
 
