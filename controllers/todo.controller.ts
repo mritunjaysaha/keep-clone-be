@@ -18,8 +18,6 @@ export const getTodoById = (req: Request, res: Response, next: NextFunction, id:
 export const createTodo = (req: Request, res: Response) => {
     const todo = new TodoModel(req.body);
 
-    console.log('[createTodo]', req.body);
-
     todo.save((err, todo) => {
         if (err) {
             return res.status(400).json({ error: 'Failed to create todo', msg: err.message });
@@ -55,8 +53,6 @@ export const getTodo = (req: Request, res: Response) => {
 };
 
 export const getAllTodoByUserId = (req: Request, res: Response) => {
-    console.log('[getAllTodoByUserId]', req.profile);
-
     UserModel.findById(req.profile.id)
         .populate('todo')
         .exec((err, user) => {
