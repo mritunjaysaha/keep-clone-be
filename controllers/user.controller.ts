@@ -2,16 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../models/user.model';
 
 export const getUserById = (req: Request, res: Response, next: NextFunction, id: string) => {
-    console.log('[getUserById]', { id });
-    UserModel.findById(id).exec((err, user) => {
+    console.log('[getUserById]', { id, req });
+    UserModel.findOne({ email: id }).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'No user found',
             });
         }
-
+        console.log({ user });
         req.profile = user;
-        req.profile.id = id;
 
         next();
     });

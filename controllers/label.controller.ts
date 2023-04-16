@@ -4,7 +4,7 @@ import { UserModel } from '../models/user.model';
 import { LabelModel } from '../models/label.model';
 
 export const getLabelById = (req: Request, res: Response, next: NextFunction, id: string) => {
-    LabelModel.findById(id).exec((err, label) => {
+    LabelModel.find({ email }).exec((err, label) => {
         if (err) {
             res.status(400).json({ error: 'Label not found' });
         }
