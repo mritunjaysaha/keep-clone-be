@@ -7,7 +7,7 @@ interface ILabel extends Document {
 
 const LabelSchema: Schema = new Schema(
     {
-        labelName: { type: String, required: true, trim: true },
+        labelName: { type: String, required: true, trim: true, unique: true },
         todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
     },
     { timestamps: true },
