@@ -62,11 +62,11 @@ export const login = (req: Request, res: Response) => {
         res.cookie('token', token, { expire: new Date() + 9999 });
 
         // send response to frontend
-        const { id, email, firstName, lastName } = user;
+        const { email, firstName, lastName } = user;
 
         return res.json({
             token,
-            user: { id, email, firstName, lastName },
+            user: { email, firstName, lastName },
         });
     });
 };
