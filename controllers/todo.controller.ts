@@ -5,13 +5,14 @@ import { NextFunction, Request, Response } from 'express';
 
 export const getTodoById = (req: Request, res: Response, next: NextFunction, id: string) => {
     console.log('[getTodoById]', { id });
-    TodoModel.findById({ todoId: id }).exec((err, todo) => {
+    TodoModel.findOne({ todoId: id }).exec((err, todo) => {
         if (err) {
-            res.status(400).json({ error: 'todo not found' });
+            return res.status(400).json({ message: 'todo not found', error: err.message });
         }
 
         req.todo = todo;
 
+        console.log('[getTodoById]', { todo });
         next();
     });
 };
@@ -24,10 +25,10 @@ export const createTodo = (req: Request, res: Response) => {
         .then((todo) => {
             console.log('[createTodo]', { todo });
 
-            return res.status(403).json({ error: 'Duplicate todoId' });
+            return res.status(403).json({ message: 'Duplicate todoId' });
         })
         .catch((err) => {
-            return res.status(403).json({ error: 'Something went wrong', msg: err });
+            return res.status(403).json({ message: 'Something went wrong', error: err });
         });
 
     // Save the todo
@@ -35,7 +36,7 @@ export const createTodo = (req: Request, res: Response) => {
 
     todo.save((err, todo) => {
         if (err) {
-            return res.status(400).json({ error: 'Failed to create todo', msg: err.message });
+            return res.status(400).json({ message: 'Failed to create todo', error: err.message });
         }
 
         UserModel.findByIdAndUpdate(
@@ -44,7 +45,7 @@ export const createTodo = (req: Request, res: Response) => {
             { new: true, upsert: true },
             (err, user) => {
                 if (err || !user) {
-                    return res.status(400).json({ error: 'Failed to create todo', msg: err });
+                    return res.status(400).json({ message: 'Failed to create todo', error: err.message });
                 }
             },
         );
@@ -54,12 +55,13 @@ export const createTodo = (req: Request, res: Response) => {
 };
 
 export const removeTodo = (req: Request, res: Response) => {
-    TodoModel.deleteOne({ _id: req.params.todoId }, (err, todo) => {
+    console.log('[removeTodo]', req.params.todoId);
+    TodoModel.deleteOne({ todoId: req.params.todoId }, (err, todo) => {
         if (err) {
-            res.status(400).json({ error: 'Failed to find todo' });
+            res.status(400).json({ message: 'Failed to find todo', error: err.message });
         }
 
-        return res.json({ msg: 'Todo successfully deleted' });
+        return res.json({ message: 'Todo successfully deleted' });
     });
 };
 
@@ -68,9 +70,9 @@ export const getTodo = (req: Request, res: Response) => {
 };
 
 export const getAllTodoByUserId = (req: Request, res: Response) => {
-    console.log('[getAllTodoByUserId]');
-    UserModel.findById(req.profile.id)
-        .populate('todo')
+    console.log('[getAllTodoByUserId]', { email: req.profile.email });
+    UserModel.findOne({ email: req.profile.email })
+        .populate('todos')
         .exec((err, user) => {
             if (err) {
                 return res.status(400).json({ message: 'Failed to populate', error: err.message });
