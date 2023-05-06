@@ -17,41 +17,38 @@ export const getTodoById = (req: Request, res: Response, next: NextFunction, id:
     });
 };
 
-export const createTodo = (req: Request, res: Response) => {
-    console.log('[createTodo]', { body: req.body, todoId: req.body.todoId });
+export const createTodo = async (req: Request, res: Response) => {
+    const { body, profile } = req;
 
-    // check whether todo id already exists
-    TodoModel.findOne({ todoId: req.body.todoId })
-        .then((todo) => {
-            console.log('[createTodo]', { todo });
+    const existingTodo = await TodoModel.findOne({ todoId: body.todoId });
 
-            return res.status(403).json({ message: 'Duplicate todoId' });
-        })
-        .catch((err) => {
-            return res.status(403).json({ message: 'Something went wrong', error: err });
-        });
+    if (existingTodo) {
+        return res.status(400).json({ success: false, message: 'Duplicate todo id' });
+    }
 
-    // Save the todo
-    const todo = new TodoModel(req.body);
+    const newTodo = new TodoModel(body);
 
-    todo.save((err, todo) => {
-        if (err) {
-            return res.status(400).json({ message: 'Failed to create todo', error: err.message });
+    try {
+        const savedTodo = await newTodo.save();
+
+        if (savedTodo?.todoId) {
+            const user = await UserModel.findOneAndUpdate(
+                { email: profile.email },
+                { $push: { todos: savedTodo._id } },
+                { new: true, upsert: true },
+            );
+
+            if (!user) {
+                await savedTodo.remove();
+
+                return res.status(400).json({ success: false, message: 'Failed to save todo' });
+            }
         }
 
-        UserModel.findByIdAndUpdate(
-            req.profile._id,
-            { $push: { todos: todo.todoId } },
-            { new: true, upsert: true },
-            (err, user) => {
-                if (err || !user) {
-                    return res.status(400).json({ message: 'Failed to create todo', error: err.message });
-                }
-            },
-        );
-
-        return res.json(todo);
-    });
+        return res.json({ success: true, message: 'Successfully saved todo' });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: 'Failed to save todo', error: err.message });
+    }
 };
 
 export const removeTodo = (req: Request, res: Response) => {

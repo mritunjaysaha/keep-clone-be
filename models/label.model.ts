@@ -9,9 +9,9 @@ const LabelSchema: Schema = new Schema(
     {
         labelId: { type: String, required: true, trim: true, unique: true },
         labelName: { type: String, required: true, trim: true, unique: true },
-        todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
+        todo: [{ type: Schema.Types.ObjectId, ref: 'todos' }],
     },
     { timestamps: true },
 );
 
-export const LabelModel: Model<ILabel> = model<ILabel>('label', LabelSchema);
+export const LabelModel: Model<ILabel> = model<ILabel>('labels', LabelSchema);

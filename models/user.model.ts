@@ -38,8 +38,8 @@ const UserSchema: Schema = new Schema(
         salt: {
             type: String,
         },
-        todos: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
-        labels: [{ type: Schema.Types.ObjectId, ref: 'label' }],
+        todos: [{ type: Schema.Types.ObjectId, ref: 'todos' }],
+        labels: [{ type: Schema.Types.ObjectId, ref: 'labels' }],
     },
     { timestamps: true },
 );

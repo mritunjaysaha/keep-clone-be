@@ -29,4 +29,4 @@ const TodoSchema: Schema = new Schema(
     { timestamps: true },
 );
 
-export const TodoModel: Model<ITodo> = model<ITodo>('todo', TodoSchema);
+export const TodoModel: Model<ITodo> = model<ITodo>('todos', TodoSchema);
