@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 
 export const getTodoById = (req: Request, res: Response, next: NextFunction, id: string) => {
     console.log('[getTodoById]', { id });
-    TodoModel.findById(id).exec((err, todo) => {
+    TodoModel.findById({ todoId: id }).exec((err, todo) => {
         if (err) {
             res.status(400).json({ error: 'todo not found' });
         }
@@ -17,6 +17,20 @@ export const getTodoById = (req: Request, res: Response, next: NextFunction, id:
 };
 
 export const createTodo = (req: Request, res: Response) => {
+    console.log('[createTodo]', { body: req.body, todoId: req.body.todoId });
+
+    // check whether todo id already exists
+    TodoModel.findOne({ todoId: req.body.todoId })
+        .then((todo) => {
+            console.log('[createTodo]', { todo });
+
+            return res.status(403).json({ error: 'Duplicate todoId' });
+        })
+        .catch((err) => {
+            return res.status(403).json({ error: 'Something went wrong', msg: err });
+        });
+
+    // Save the todo
     const todo = new TodoModel(req.body);
 
     todo.save((err, todo) => {
@@ -26,7 +40,7 @@ export const createTodo = (req: Request, res: Response) => {
 
         UserModel.findByIdAndUpdate(
             req.profile._id,
-            { $push: { todo: todo._id } },
+            { $push: { todos: todo.todoId } },
             { new: true, upsert: true },
             (err, user) => {
                 if (err || !user) {
@@ -54,7 +68,7 @@ export const getTodo = (req: Request, res: Response) => {
 };
 
 export const getAllTodoByUserId = (req: Request, res: Response) => {
-    console.log('[getAllTodoByUserId]', { profile: req.profile });
+    console.log('[getAllTodoByUserId]');
     UserModel.findById(req.profile.id)
         .populate('todo')
         .exec((err, user) => {
