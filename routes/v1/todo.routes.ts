@@ -21,7 +21,7 @@ router.post('/:userId', isSignedIn, isAuthenticated, createTodo);
  * @method GET
  * @route /api/v1/todo/:userId
  */
-router.get('/all/:userId', isSignedIn, isAuthenticated, getAllTodoByUserId);
+router.get('/:userId/all', isSignedIn, isAuthenticated, getAllTodoByUserId);
 
 /**
  * @method DELETE

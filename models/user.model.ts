@@ -9,7 +9,7 @@ export interface IUser extends Document {
     encryptedPassword: string;
     salt: string;
     todo: string[];
-    label: string[];
+    labels: string[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -39,7 +39,7 @@ const UserSchema: Schema = new Schema(
             type: String,
         },
         todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
-        label: [{ type: Schema.Types.ObjectId, ref: 'label' }],
+        labels: [{ type: Schema.Types.ObjectId, ref: 'label' }],
     },
     { timestamps: true },
 );

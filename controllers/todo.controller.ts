@@ -4,6 +4,7 @@ import { UserModel } from '../models/user.model';
 import { NextFunction, Request, Response } from 'express';
 
 export const getTodoById = (req: Request, res: Response, next: NextFunction, id: string) => {
+    console.log('[getTodoById]', { id });
     TodoModel.findById(id).exec((err, todo) => {
         if (err) {
             res.status(400).json({ error: 'todo not found' });
@@ -53,6 +54,7 @@ export const getTodo = (req: Request, res: Response) => {
 };
 
 export const getAllTodoByUserId = (req: Request, res: Response) => {
+    console.log('[getAllTodoByUserId]', { profile: req.profile });
     UserModel.findById(req.profile.id)
         .populate('todo')
         .exec((err, user) => {
