@@ -67,17 +67,18 @@ export const getTodo = (req: Request, res: Response) => {
     return res.json(req.todo);
 };
 
-export const getAllTodoByUserId = (req: Request, res: Response) => {
-    console.log('[getAllTodoByUserId]', { email: req.profile.email });
-    UserModel.findOne({ email: req.profile.email })
-        .populate('todos')
-        .exec((err, user) => {
-            if (err) {
-                return res.status(400).json({ message: 'Failed to populate', error: err.message });
-            }
+export const getAllTodoByUserId = async (req: Request, res: Response) => {
+    const { email } = req.profile;
 
-            return res.json(user.todo);
-        });
+    try {
+        const user = await UserModel.findOne({ email }).populate('todos');
 
-    // return res.json(req.profile);
+        if (!user) {
+            return res.status(400).json({ success: false, message: `Failed to get todos for ${email}` });
+        }
+
+        return res.json({ success: true, message: 'Todos populated successfully', todos: user.todos });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: `Failed to get todos for ${email}` });
+    }
 };
