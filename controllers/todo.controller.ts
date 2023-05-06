@@ -51,15 +51,16 @@ export const createTodo = async (req: Request, res: Response) => {
     }
 };
 
-export const removeTodo = (req: Request, res: Response) => {
-    console.log('[removeTodo]', req.params.todoId);
-    TodoModel.deleteOne({ todoId: req.params.todoId }, (err, todo) => {
-        if (err) {
-            res.status(400).json({ message: 'Failed to find todo', error: err.message });
-        }
+export const removeTodo = async (req: Request, res: Response) => {
+    const deletedTodo = await TodoModel.deleteOne({ todoId: req.params.todoId });
 
-        return res.json({ message: 'Todo successfully deleted' });
-    });
+    console.log('[removeTodo]', { deletedTodo });
+
+    if (deletedTodo?.deletedCount > 0) {
+        return res.json({ success: true, message: `${req.params.todoId} successfully deleted` });
+    }
+
+    return res.status(400).json({ success: false, message: `Failed to delete todo with id:${req.params.todoId}` });
 };
 
 export const getTodo = (req: Request, res: Response) => {
