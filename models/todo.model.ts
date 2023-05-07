@@ -10,7 +10,6 @@ export interface ITodo extends Document {
     hasReminder: boolean;
     isPinned: boolean;
     labels: string[];
-    lastEdited: string;
 }
 
 const TodoSchema: Schema = new Schema(
@@ -24,7 +23,6 @@ const TodoSchema: Schema = new Schema(
         hasReminder: { type: Boolean, default: false },
         isPinned: { type: Boolean, default: false },
         labels: { type: [String], default: [] },
-        lastEdited: { type: String, default: '' },
     },
     { timestamps: true },
 );

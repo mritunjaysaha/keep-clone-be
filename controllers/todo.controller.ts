@@ -1,5 +1,5 @@
-import { TodoModel } from '../models/todo.model';
-import { UserModel } from '../models/user.model';
+import { ITodo, TodoModel } from '../models/todo.model';
+import { IUser, UserModel } from '../models/user.model';
 
 import { NextFunction, Request, Response } from 'express';
 
@@ -17,57 +17,57 @@ export const getTodoById = (req: Request, res: Response, next: NextFunction, id:
     });
 };
 
-export const createTodo = async (req: Request, res: Response) => {
-    const { body, profile } = req;
+export const createOrUpdateTodo = async (req: Request, res: Response) => {
+    const { body, profile, params, todo } = req;
 
-    console.log('[createTodo]', { body });
+    const { todoId } = params;
+    const existingTodoId = todo?.todoId ?? '';
+    console.log('[createOrUpdateTodo]', { body, todoId, existingTodoId });
 
-    const existingTodo = await TodoModel.findOne({ todoId: body.todoId });
-
-    if (existingTodo) {
-        return res.status(400).json({ success: false, message: 'Duplicate todo id' });
-    }
-
-    const newTodo = new TodoModel(body);
+    const updates = body;
 
     try {
-        const savedTodo = await newTodo.save();
+        let todo;
+        if (existingTodoId) {
+            // update existing todo
+            todo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
+        } else {
+            // create new todo
+            const existingTodo = await TodoModel.findOne({ todoId });
 
-        if (savedTodo?.todoId) {
-            const user = await UserModel.findOneAndUpdate(
-                { email: profile.email },
-                { $push: { todos: savedTodo._id } },
-                { new: true, upsert: true },
-            );
+            if (existingTodo) {
+                return res.status(400).json({ success: false, message: 'Duplicate todo id' });
+            }
 
-            if (!user) {
-                await savedTodo.remove();
+            body.todoId = todoId;
 
-                return res.status(400).json({ success: false, message: 'Failed to save todo' });
+            console.log('[createOrUpdateTodo] here', { body });
+
+            const newTodo = new TodoModel(body);
+            todo = await newTodo.save();
+
+            if (todo?.todoId) {
+                const user = await UserModel.findOneAndUpdate(
+                    { email: profile.email },
+                    { $push: { todos: todo._id } },
+                    { new: true, upsert: true },
+                );
+
+                if (!user) {
+                    await todo.remove();
+
+                    return res.status(400).json({ success: false, message: 'Failed to create todo' });
+                }
             }
         }
 
-        return res.json({ success: true, message: 'Successfully saved todo' });
-    } catch (err) {
-        return res.status(400).json({ success: false, message: 'Failed to save todo', error: err.message });
-    }
-};
-
-export const updateTodo = async (req: Request, res: Response) => {
-    console.log('[updateTodo]', req.params);
-    const { todoId } = req.params;
-    const updates = req.body;
-
-    try {
-        const updatedTodo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
-
-        if (!updatedTodo) {
-            return res.status(404).json({ success: false, message: 'Todo not found' });
+        if (todo) {
+            return res.json({ success: true, message: 'Todo saved successfully', todo });
+        } else {
+            return res.status(400).json({ success: false, message: 'Failed to create or update todo' });
         }
-
-        return res.json({ success: true, message: 'Todo successfully updated' });
     } catch (err) {
-        return res.status(500).json({ success: false, message: 'Error updating todo', error: err.message });
+        return res.status(500).json({ success: false, message: 'Server error', error: err });
     }
 };
 
