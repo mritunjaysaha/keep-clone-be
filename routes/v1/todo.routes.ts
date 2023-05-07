@@ -33,7 +33,7 @@ router.get('/all/:userId', isSignedIn, isAuthenticated, getAllTodoByUserId);
  * @method GET
  * @route /api/v1/todos/:userId/:todoId
  * @description get todo by todoId
- * @access
+ * @access private
  */
 router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
 
@@ -41,9 +41,9 @@ router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
  * @method PUT
  * @route /api/v1/todos/:userId/:todoId
  * @description update todo by todoId
- * @access
+ * @access private
  */
-router.put('/:userId/:todoId', isSignedIn, isAuthenticated, updateTodo);
+router.patch('/:userId/:todoId', isSignedIn, isAuthenticated, updateTodo);
 
 /**
  * @method DELETE

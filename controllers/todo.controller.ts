@@ -58,18 +58,17 @@ export const updateTodo = async (req: Request, res: Response) => {
     const { todoId } = req.params;
     const updates = req.body;
 
-    return res.json({ updates });
-    // try {
-    //     const updatedTodo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
+    try {
+        const updatedTodo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
 
-    //     if (!updatedTodo) {
-    //         return res.status(404).json({ success: false, message: 'Todo not found' });
-    //     }
+        if (!updatedTodo) {
+            return res.status(404).json({ success: false, message: 'Todo not found' });
+        }
 
-    //     return res.json({ success: true, message: 'Todo successfully updated' });
-    // } catch (err) {
-    //     return res.status(500).json({ success: false, message: 'Error updating todo', error: err.message });
-    // }
+        return res.json({ success: true, message: 'Todo successfully updated' });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Error updating todo', error: err.message });
+    }
 };
 
 export const removeTodo = async (req: Request, res: Response) => {

@@ -2,8 +2,8 @@ import { model, Schema, Model, Document } from 'mongoose';
 
 export interface ITodo extends Document {
     todoId: string;
-    title: string;
-    body: string;
+    todoTitle: string;
+    todoBody: string;
     theme: string;
     images: any[];
     reminder: string;
