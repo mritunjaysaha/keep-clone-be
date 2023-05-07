@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { getUserById, getUser } from '../controllers/user.controller';
-import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
+import { getUserById, getUser } from '../../controllers/user.controller';
+import { isAuthenticated, isSignedIn } from '../../controllers/auth.controller';
 
 const router = Router();
 

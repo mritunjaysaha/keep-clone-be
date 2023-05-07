@@ -16,8 +16,8 @@ export interface ITodo extends Document {
 const TodoSchema: Schema = new Schema(
     {
         todoId: { type: String, required: true },
-        title: { type: String, trim: true },
-        body: { type: String, trim: true },
+        todoTitle: { type: String, trim: true },
+        todoBody: { type: String, trim: true },
         theme: { type: String, default: '' },
         images: { type: [String], default: [] },
         reminder: { type: String, default: '' },

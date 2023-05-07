@@ -8,12 +8,12 @@ import {
     removeLabel,
     getAllTodoByLabelId,
     putTodoToALabel,
-} from '../controllers/label.controller';
+} from '../../controllers/label.controller';
 
-import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
+import { isAuthenticated, isSignedIn } from '../../controllers/auth.controller';
 
-import { getUserById } from '../controllers/user.controller';
-import { getTodoById } from '../controllers/todo.controller';
+import { getUserById } from '../../controllers/user.controller';
+import { getTodoById } from '../../controllers/todo.controller';
 import { putLabelName } from '../../controllers/label.controller';
 
 const router = Router();

@@ -20,6 +20,8 @@ export const getTodoById = (req: Request, res: Response, next: NextFunction, id:
 export const createTodo = async (req: Request, res: Response) => {
     const { body, profile } = req;
 
+    console.log('[createTodo]', { body });
+
     const existingTodo = await TodoModel.findOne({ todoId: body.todoId });
 
     if (existingTodo) {
@@ -51,6 +53,25 @@ export const createTodo = async (req: Request, res: Response) => {
     }
 };
 
+export const updateTodo = async (req: Request, res: Response) => {
+    console.log('[updateTodo]', req.params);
+    const { todoId } = req.params;
+    const updates = req.body;
+
+    return res.json({ updates });
+    // try {
+    //     const updatedTodo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
+
+    //     if (!updatedTodo) {
+    //         return res.status(404).json({ success: false, message: 'Todo not found' });
+    //     }
+
+    //     return res.json({ success: true, message: 'Todo successfully updated' });
+    // } catch (err) {
+    //     return res.status(500).json({ success: false, message: 'Error updating todo', error: err.message });
+    // }
+};
+
 export const removeTodo = async (req: Request, res: Response) => {
     const deletedTodo = await TodoModel.deleteOne({ todoId: req.params.todoId });
 
@@ -69,6 +90,8 @@ export const getTodo = (req: Request, res: Response) => {
 
 export const getAllTodoByUserId = async (req: Request, res: Response) => {
     const { email } = req.profile;
+
+    console.log('[getAllTodoByUserId]', { email });
 
     try {
         const user = await UserModel.findOne({ email }).populate('todos');

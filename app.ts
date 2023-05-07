@@ -8,9 +8,9 @@ import { connectDB } from './config/db.config';
 
 // ROUTES
 import authRoutes from './routes/v1/auth.routes';
-import userRoutes from './routes/user.routes';
-import todoRoutes from './routes/todo.routes';
-import labelRoutes from './routes/label.routes';
+import userRoutes from './routes/v1/user.routes';
+import todoRoutes from './routes/v1/todo.routes';
+import labelRoutes from './routes/v1/label.routes';
 
 //  INITIALIZE APP
 const app: Express = express();
@@ -27,12 +27,10 @@ app.use(express.json({ extend: false }));
 app.get('/', (req: Request, res: Response) => {
     res.send('Server up and running');
 });
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/todos', todoRoutes);
 app.use('/api/v1/labels', labelRoutes);
-// app.use('*', (req: Request, res: Response) => {
-//     return res.send('route does not exists');
-// });
 
 export { app };

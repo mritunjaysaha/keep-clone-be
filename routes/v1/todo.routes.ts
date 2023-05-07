@@ -1,8 +1,14 @@
 import { Router } from 'express';
-
-import { createTodo, getAllTodoByUserId, getTodo, getTodoById, removeTodo } from '../controllers/todo.controller';
-import { isAuthenticated, isSignedIn } from '../controllers/auth.controller';
-import { getUserById } from '../controllers/user.controller';
+import { getUserById } from '../../controllers/user.controller';
+import {
+    createTodo,
+    getAllTodoByUserId,
+    getTodo,
+    getTodoById,
+    removeTodo,
+    updateTodo,
+} from '../../controllers/todo.controller';
+import { isAuthenticated, isSignedIn } from '../../controllers/auth.controller';
 
 const router = Router();
 
@@ -11,7 +17,7 @@ router.param('todoId', getTodoById);
 
 /**
  * @method POST
- * @route /api/v1/todo/create/:userId
+ * @route /api/v1/todos/:userId
  * @description create a todo
  * @access private
  */
@@ -19,20 +25,30 @@ router.post('/:userId', isSignedIn, isAuthenticated, createTodo);
 
 /**
  * @method GET
- * @route /api/v1/todo/:userId
+ * @route /api/v1/todos/:userId/all
  */
-router.get('/:userId/all', isSignedIn, isAuthenticated, getAllTodoByUserId);
-
-/**
- * @method DELETE
- * @route /api/v1/todo/remove/:userId/:todoId
- */
-router.delete('/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
+router.get('/all/:userId', isSignedIn, isAuthenticated, getAllTodoByUserId);
 
 /**
  * @method GET
- * @route /api/v1/todo/:userId/:todoId
+ * @route /api/v1/todos/:userId/:todoId
+ * @description get todo by todoId
+ * @access
  */
 router.get('/:userId/:todoId', isSignedIn, isAuthenticated, getTodo);
+
+/**
+ * @method PUT
+ * @route /api/v1/todos/:userId/:todoId
+ * @description update todo by todoId
+ * @access
+ */
+router.put('/:userId/:todoId', isSignedIn, isAuthenticated, updateTodo);
+
+/**
+ * @method DELETE
+ * @route /api/v1/todos/remove/:userId/:todoId
+ */
+router.delete('/:userId/:todoId', isSignedIn, isAuthenticated, removeTodo);
 
 export default router;
