@@ -21,27 +21,61 @@ export const getLabel = (req: Request, res: Response) => {
     return res.json(req.label);
 };
 
-export const createLabel = (req: Request, res: Response) => {
-    const label = new LabelModel(req.body);
+export const createOrUpdateLabel = async (req: Request, res: Response) => {
+    const { body, params, profile, label } = req;
 
-    label.save((err, label) => {
-        if (err) {
-            return res.status(400).json({ error: 'Failed to create label', msg: err.message });
+    const { labelId } = params;
+
+    const existingLabelId = label?.labelId ?? '';
+
+    console.log('[createOrUpdateLabel]', { body, label, labelId });
+
+    try {
+        let label;
+
+        if (existingLabelId) {
+            label = await LabelModel.findOneAndUpdate({ labelId }, body, { new: true });
+        } else {
+            const labelData = {
+                labelId,
+                labelName: body.labelName,
+            };
+
+            console.log('[createOrUpdateLabel] here', { labelData });
+
+            const newLabel = new LabelModel(labelData);
+            label = await newLabel.save();
+
+            console.log('[createOrUpdateLabel] here', { newLabel });
+
+            if (label?.labelId) {
+                const user = await UserModel.findOneAndUpdate(
+                    { email: profile.email },
+                    { $push: { labels: label._id } },
+                    { new: true, upsert: true },
+                );
+
+                console.log({ user });
+
+                if (!user) {
+                    await label.remove();
+
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Failed to create a label',
+                    });
+                }
+            }
         }
 
-        UserModel.findByIdAndUpdate(
-            req.profile._id,
-            { $push: { label: label._id } },
-            { new: true, upsert: true },
-            (err, user) => {
-                if (err || !user) {
-                    return res.status(400).json({ error: 'Failed to create label', msg: err });
-                }
-            },
-        );
-
-        return res.json(label);
-    });
+        if (label) {
+            return res.json({ success: true, message: 'Label saved successfully' });
+        } else {
+            return res.status(400).json({ success: false, message: 'Failed update label' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error', error: err });
+    }
 };
 
 /**
@@ -61,16 +95,19 @@ export const removeLabel = (req: Request, res: Response) => {
     });
 };
 
-export const getAllLabelByUserId = (req: Request, res: Response) => {
-    UserModel.findById(req.profile.id)
-        .populate('label')
-        .exec((err, user) => {
-            if (err) {
-                return res.status(400).json({ message: 'Failed to populate labels', error: err.message });
-            }
+export const getAllLabelByUserId = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.profile;
+        const user = await UserModel.findOne({ email }).populate('labels');
 
-            return res.json(user.label);
-        });
+        if (!user) {
+            return res.status(400).json({ suceess: false, message: `Failed to get labels for ${email}` });
+        }
+
+        return res.json({ success: true, message: 'Labels populated successfully', labels: user.labels });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: 'Failed to get labels', error: err });
+    }
 };
 
 export const getAllTodoByLabelId = (req: Request, res: Response) => {
@@ -85,7 +122,7 @@ export const getAllTodoByLabelId = (req: Request, res: Response) => {
         });
 };
 
-export const putTodoToALabel = (req: Request, res: Response) => {
+export const addTodoToALabel = (req: Request, res: Response) => {
     LabelModel.findByIdAndUpdate(
         req.label.id,
         { $push: { todo: req.todo.id } },
@@ -95,21 +132,6 @@ export const putTodoToALabel = (req: Request, res: Response) => {
                 return res.status(400).json({ error: 'Failed to assign label', msg: err });
             }
             return res.json(label);
-        },
-    );
-};
-
-export const putLabelName = (req: Request, res: Response) => {
-    const { label } = req;
-    console.log('[putLabelName]', { label });
-    LabelModel.findOneAndUpdate(
-        { labelId: req.label.labelId },
-        { labelName: req.body.labelName },
-        { new: true },
-        (err, label) => {
-            if (err || !label) {
-                return res.status(400).json({ error: 'Failed to update label name', msg: err });
-            }
         },
     );
 };

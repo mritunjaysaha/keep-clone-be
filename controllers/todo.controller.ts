@@ -32,13 +32,6 @@ export const createOrUpdateTodo = async (req: Request, res: Response) => {
             // update existing todo
             todo = await TodoModel.findOneAndUpdate({ todoId }, updates, { new: true });
         } else {
-            // create new todo
-            const existingTodo = await TodoModel.findOne({ todoId });
-
-            if (existingTodo) {
-                return res.status(400).json({ success: false, message: 'Duplicate todo id' });
-            }
-
             body.todoId = todoId;
 
             console.log('[createOrUpdateTodo] here', { body });
@@ -64,7 +57,7 @@ export const createOrUpdateTodo = async (req: Request, res: Response) => {
         if (todo) {
             return res.json({ success: true, message: 'Todo saved successfully', todo });
         } else {
-            return res.status(400).json({ success: false, message: 'Failed to create or update todo' });
+            return res.status(400).json({ success: false, message: 'Failed to update todo' });
         }
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Server error', error: err });

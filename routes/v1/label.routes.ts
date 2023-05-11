@@ -1,33 +1,25 @@
 import { Router } from 'express';
 
 import {
-    createLabel,
     getLabel,
     getAllLabelByUserId,
     getLabelById,
     removeLabel,
     getAllTodoByLabelId,
-    putTodoToALabel,
+    createOrUpdateLabel,
+    addTodoToALabel,
 } from '../../controllers/label.controller';
 
 import { isAuthenticated, isSignedIn } from '../../controllers/auth.controller';
 
 import { getUserById } from '../../controllers/user.controller';
 import { getTodoById } from '../../controllers/todo.controller';
-import { putLabelName } from '../../controllers/label.controller';
 
 const router = Router();
 
 router.param('userId', getUserById);
 router.param('labelId', getLabelById);
 router.param('todoId', getTodoById);
-
-/**
- * @method POST
- * @route /api/v1/labels/:userId
- * @access private
- */
-router.post('/:userId', isSignedIn, isAuthenticated, createLabel);
 
 /**
  * @method GET
@@ -37,17 +29,18 @@ router.post('/:userId', isSignedIn, isAuthenticated, createLabel);
 router.get('/:userId/all', isSignedIn, isAuthenticated, getAllLabelByUserId);
 
 /**
+ * @method POST
+ * @route /api/v1/labels/:userId
+ * @access private
+ */
+router.post('/:userId/:labelId', isSignedIn, isAuthenticated, createOrUpdateLabel);
+
+/**
  * @method GET
  * @route /api/v1/labels/:userId/:labelId
  * @access private
  */
 router.get('/:userId/:labelId', isSignedIn, isAuthenticated, getLabel);
-
-/**
- * @method PUT
- * @route /api/v1/labels/:userId/:labelId
- */
-router.put('/:userId/:labelId', isSignedIn, isAuthenticated, putLabelName);
 
 /**
  * @method DELETE
@@ -66,6 +59,6 @@ router.get('/:userId/:labelId/all', isSignedIn, isAuthenticated, getAllTodoByLab
  * @method PUT
  * @route /api/v1/labels/:userId/:labelId/:todoId
  */
-router.put('/:userId/:labelId/:todoId', isSignedIn, isAuthenticated, putTodoToALabel);
+router.put('/:userId/:labelId/:todoId', isSignedIn, isAuthenticated, addTodoToALabel);
 
 export default router;
