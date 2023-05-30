@@ -91,7 +91,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     const checker = profile && auth && profile._id.toString() === auth._id;
 
     if (!checker) {
-        return res.status(403).json({ error: '[ACCESS DENIED]' });
+        return res.status(401).json({ error: '[ACCESS DENIED]' });
     }
 
     next();
