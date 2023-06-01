@@ -2,6 +2,7 @@ import { ITodo, TodoModel } from '../models/todo.model';
 import { IUser, UserModel } from '../models/user.model';
 
 import { NextFunction, Request, Response } from 'express';
+import { SortType } from '../utils/SortType';
 
 export const getTodoById = (req: Request, res: Response, next: NextFunction, id: string) => {
     console.log('[getTodoById]', { id });
@@ -85,11 +86,13 @@ export const getAllTodoByUserId = async (req: Request, res: Response) => {
 
     // console.log('[getAllTodoByUserId]', req.query);
 
-    const { offset, limit, sortBy } = req.query;
+    const { offset, limit } = req.query;
+
+    const sortBy = req.query.sortBy as SortType;
 
     const parsedOffset = parseInt(offset as string);
     const parsedLimit = parseInt(limit as string);
-    const sortOrder = sortBy === 'asc' ? 1 : -1;
+    const sortOrder = sortBy === 'ASC' ? 1 : -1;
 
     try {
         const user = await UserModel.findOne({ email }).populate({
