@@ -83,10 +83,23 @@ export const getTodo = (req: Request, res: Response) => {
 export const getAllTodoByUserId = async (req: Request, res: Response) => {
     const { email } = req.profile;
 
-    console.log('[getAllTodoByUserId]', { email });
+    // console.log('[getAllTodoByUserId]', req.query);
+
+    const { offset, limit, sortBy } = req.query;
+
+    const parsedOffset = parseInt(offset as string);
+    const parsedLimit = parseInt(limit as string);
+    const sortOrder = sortBy === 'asc' ? 1 : -1;
 
     try {
-        const user = await UserModel.findOne({ email }).populate('todos');
+        const user = await UserModel.findOne({ email }).populate({
+            path: 'todos',
+            options: {
+                skip: parsedOffset,
+                limit: parsedLimit,
+                sort: { createdAt: sortOrder },
+            },
+        });
 
         if (!user) {
             return res.status(400).json({ success: false, message: `Failed to get todos for ${email}` });
