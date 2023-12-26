@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
 import { expressjwt } from 'express-jwt';
+import passport from 'passport';
 
 export const signup = (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -63,6 +64,8 @@ export const login = (req: Request, res: Response) => {
 
         // send response to frontend
         const { email, firstName, lastName } = user;
+
+        passport.authenticate('local', { failureRedirect: '/login', failureMessage: true });
 
         return res.json({
             token,
