@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { check } from 'express-validator';
 import { signup, login, signOut, isSignedIn } from '../../controllers/auth.controller';
 import { getUserById } from '../../controllers/user.controller';
+import JWT from 'jsonwebtoken';
+import passport from '../../utils/passport';
 
 const router = Router();
 
@@ -27,8 +29,37 @@ router.post(
  */
 router.post(
     '/login',
-    [check('email', 'E-mail is required').isEmail(), check('password', 'Password is require').isLength({ min: 1 })],
-    login,
+    // [check('email', 'E-mail is required').isEmail(), check('password', 'Password is require').isLength({ min: 1 })],
+    // // login,
+    passport.authenticate('local', { session: false, failureMessage: true }),
+    (req, res) => {
+        console.log('[LogIn]');
+        if (req.isAuthenticated()) {
+            const { email, password } = req.body;
+
+            console.log({ req });
+
+            const token = JWT.sign(
+                {
+                    iss: 'Mritunjay',
+                    sub: email,
+                },
+                'realmex3superzoom',
+                { expiresIn: '2h' },
+            );
+
+            res.cookie(
+                'access_token',
+                token,
+
+                {
+                    httpOnly: true,
+                    sameSite: true,
+                },
+            );
+            return res.status(200).json({ isAuthenticated: true, user: { email } });
+        }
+    },
 );
 
 /**

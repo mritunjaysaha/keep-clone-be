@@ -21,33 +21,34 @@ const app: Express = express();
 
 // INITIALIZE PASSPORT
 passport.use(
-    new LocalStrategy((email, password, done) => {
-        UserModel.findOne({ email: email }, (err, user) => {
-            console.log('[Passport]', { err, user });
+    'local',
+    new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, (email, password, done) => {
+        console.log('[LocalStrategy]');
+        UserModel.findOne({ email }, (err, user) => {
             if (err) {
                 return done(err);
             }
-            if (!user) {
-                return done(null, false, { message: 'Incorrect username' });
-            }
-            if (user.authenticate(password)) {
-                // return res.status(401).json({
-                //     error: 'Email and password do not match',
-                // });
 
-                return done(null, user);
+            if (!user) {
+                return done(null, false);
+            }
+
+            if (!user.authenticate(password)) {
+                return done(null, false);
             } else {
-                return done(null, false, { message: 'Incorrect password' });
+                return done(null, this);
             }
         });
     }),
 );
 
 passport.serializeUser((user, done) => {
+    console.log('[Passport] serialize user', { user });
     done(null, user.email);
 });
 
 passport.deserializeUser((email, done) => {
+    console.log('[Passport] deserialize user', { email });
     UserModel.findOne({ email }, (err, user) => {
         done(err, user);
     });
@@ -59,7 +60,7 @@ connectDB();
 //  INITIALIZE EXPRESS MIDDLEWARE
 app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
-app.use(express.json({ extend: false }));
+app.use(express.json());
 app.use(
     session({
         secret: process.env.SECRET ?? 'development_secret',
